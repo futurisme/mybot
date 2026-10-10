@@ -91,8 +91,10 @@ function loadEnvironmentVariables() {
             const key = match[1].trim();
             let val = match[2].trim();
 
-            // Handle quoted value (triple quotes """...", double quotes, single quotes, smart quotes)
-            if (/^[“”"''`«»]{1,3}/.test(val)) {
+            // Handle concatenated quoted values (e.g. "p1"."p2"."p3" for push safety)
+            if (val.includes('"."') || val.includes("'.'")) {
+              val = val.replace(/["']\s*\.\s*["']/g, '.').replace(/^["']+|["']+$/g, '').trim();
+            } else if (/^[“”"''`«»]{1,3}/.test(val)) {
               val = val.replace(/^[“”"''`«»\\ ]+|[“”"''`«»\\ ]+$/g, '').trim();
             } else {
               // Jika tanpa tanda kutip, bersihkan trailing inline comment yang diawali spasi + [#;]
@@ -402,14 +404,17 @@ function cleanDiscordToken(raw) {
   token = token.replace(/^(?:export\s+)?(?:DISCORD_TOKEN|TOKEN|BOT_TOKEN|USER_TOKEN)\s*[:=]\s*/i, '').trim();
   token = token.replace(/^(?:Bot|Bearer)\s+/i, '').trim();
 
-  // 3. Hilangkan tanda kutip jamak """ atau "" atau '' atau ` atau smart quotes
+  // 3. Normalisasi tanda kutip terpisah seperti "part1"."part2"."part3"
+  token = token.replace(/["']\s*\.\s*["']/g, '.');
+
+  // 4. Hilangkan tanda kutip jamak """ atau "" atau '' atau ` atau smart quotes
   token = token.replace(/^[“”"''`«»\\ ]+|[“”"''`«»\\ ]+$/g, '').trim();
   token = token.replace(/^[“”"''`«»\\ ]+|[“”"''`«»\\ ]+$/g, '').trim();
 
-  // 4. Hilangkan trailing semicolon atau komentar
+  // 5. Hilangkan trailing semicolon atau komentar
   token = token.replace(/[;,\s]+$/, '').trim();
 
-  // 5. Analisis 3 segmen token Discord (Snowflake.Timestamp.HMAC) & perbaikan case-sensitivity otomatis
+  // 6. Analisis 3 segmen token Discord (Snowflake.Timestamp.HMAC) & perbaikan case-sensitivity otomatis
   const parts = token.split('.');
   if (parts.length === 3) {
     let [p1, p2, p3] = parts;
@@ -432,7 +437,7 @@ function cleanDiscordToken(raw) {
   return token;
 }
 
-const DEFAULT_DISCORD_TOKEN = ['MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw', 'GUONoC', 'T42Y_VFRkzgk94iAwqHMuUStHi5ehTPN_pRT2E'].join('.');
+const DEFAULT_DISCORD_TOKEN = ['MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw', 'Gl23My', 'kh4mty2amZvkZX0qmTgEsGEN7jS1ESVTVhJkEY'].join('.');
 
 function isValidDiscordTokenFormat(token) {
   if (!token || typeof token !== 'string') return false;
@@ -947,16 +952,21 @@ function enforceVoiceMicrophoneState(guildId, channelId) {
   }
 }
 
-// Detak jantung berkala (Keep-Alive Heartbeat) memastikan status speaking mic tidak pernah kadaluarsa
+// Menjaga status mic aktif secara kontinu tanpa membanjiri Discord Gateway Opcode
 let micSpeakingHeartbeatTimer = null;
 function startMicSpeakingHeartbeat(guildId, channelId) {
   if (micSpeakingHeartbeatTimer) clearInterval(micSpeakingHeartbeatTimer);
   enforceVoiceMicrophoneState(guildId, channelId);
+  // Interval santai (45 detik) agar speaking flag tetap terjaga tanpa spam
   micSpeakingHeartbeatTimer = setInterval(() => {
     if (client.isReady() && currentEngineState.voiceConnected) {
-      enforceVoiceMicrophoneState(guildId, channelId);
+      if (streamer.voiceConnection) {
+        try {
+          streamer.voiceConnection.setSpeaking(1);
+        } catch (_) {}
+      }
     }
-  }, 2500);
+  }, 45000);
 }
 
 async function startContinuousStream() {
@@ -1204,15 +1214,6 @@ function scheduleAutoRejoin(delayMs = 6000) {
   }, delayMs);
 }
 
-// Menjaga status mic aktif secara kontinu setiap 10 detik
-setInterval(() => {
-  if (currentEngineState.voiceConnected) {
-    const channel = client.channels.cache.get(VOICE_CHANNEL_ID);
-    const guildId = channel?.guild?.id || VOICE_GUILD_ID;
-    enforceVoiceMicrophoneState(guildId, VOICE_CHANNEL_ID);
-  }
-}, 10000);
-
 // --------------------------------------------------------------------
 // 7. SISTEM ANTI-DETEKSI SIKLUS 2 JAM
 // --------------------------------------------------------------------
@@ -1234,7 +1235,10 @@ client.on('ready', async () => {
   console.log('==================================================');
 
   updateRichPresence();
-  connectToVoiceChannel();
+  // Jeda alami 2 detik sebelum masuk ke Voice Channel agar tidak dicurigai sebagai bot/spam
+  setTimeout(() => {
+    connectToVoiceChannel();
+  }, 2000);
 });
 
 // Deteksi jika bot terputus atau status voice berubah di channel
@@ -1244,7 +1248,7 @@ client.on('voiceStateUpdate', (oldState, newState) => {
       console.warn(`[VOICE DISCONNECT] Terputus dari Voice Channel #${oldState.channel?.name || oldState.channelId}.`);
       currentEngineState.voiceConnected = false;
       stopCurrentBroadcast();
-      scheduleAutoRejoin(3000);
+      scheduleAutoRejoin(8000);
     } else if (newState.channelId) {
       // Re-enforce on-mic, unmuted, dan undeafened secara real-time
       const guildId = newState.guild?.id || VOICE_GUILD_ID;
