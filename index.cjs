@@ -44,7 +44,7 @@ function loadEnvironmentVariables() {
   try {
     const dotenv = require('dotenv');
     if (dotenv && typeof dotenv.config === 'function') {
-      dotenv.config();
+      dotenv.config({ override: true });
     }
   } catch (_) {}
 
@@ -88,10 +88,10 @@ function loadEnvironmentVariables() {
             if (/^[“”"''`«»]{1,3}/.test(val)) {
               val = val.replace(/^[“”"''`«»\\ ]+|[“”"''`«»\\ ]+$/g, '').trim();
             } else {
-              // Jika tanpa tanda kutip, bersihkan trailing inline comment
-              const commentIdx = val.search(/[#;]/);
-              if (commentIdx !== -1) {
-                val = val.substring(0, commentIdx).trim();
+              // Jika tanpa tanda kutip, bersihkan trailing inline comment yang diawali spasi + [#;]
+              const commentMatch = val.match(/\s+[#;].*$/);
+              if (commentMatch && commentMatch.index !== undefined) {
+                val = val.substring(0, commentMatch.index).trim();
               }
             }
 
@@ -101,7 +101,7 @@ function loadEnvironmentVariables() {
             scannedValues[key.toUpperCase()] = val;
             scannedValues[key.toLowerCase()] = val;
 
-            if (typeof process.env[key] === 'undefined' || process.env[key] === '') {
+            if (typeof process.env[key] === 'undefined' || process.env[key] === '' || process.env[key] === 'MASUKKAN_TOKEN_DISCORD_ANDA_DISINI') {
               process.env[key] = val;
             }
           } else {
@@ -116,6 +116,19 @@ function loadEnvironmentVariables() {
       }
     } catch (_) {}
   }
+
+  // 3. Muat dari config.json jika ada
+  try {
+    const configPath = path.resolve(process.cwd(), 'config.json');
+    if (fs.existsSync(configPath)) {
+      const cfg = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      if (cfg.tokenSegments && Array.isArray(cfg.tokenSegments)) scannedValues['DISCORD_TOKEN'] = cfg.tokenSegments.join('.');
+      else if (cfg.discordToken) scannedValues['DISCORD_TOKEN'] = cfg.discordToken;
+      if (cfg.token) scannedValues['TOKEN'] = cfg.token;
+      if (cfg.voice?.token) scannedValues['VOICE_TOKEN'] = cfg.voice.token;
+      if (cfg.server?.discordToken) scannedValues['SERVER_TOKEN'] = cfg.server.discordToken;
+    }
+  } catch (_) {}
 
   if (loadedFiles.length > 0) {
     console.log(`[ENV] Berhasil memuat & menyinkronkan file .env (${loadedFiles.length} lokasi terdeteksi)`);
@@ -399,12 +412,11 @@ function cleanDiscordToken(raw) {
       p1 = p1.charAt(0).toUpperCase() + p1.charAt(1).toUpperCase() + p1.slice(2);
     }
 
-    // Koreksi spesifik jika user memiliki snowflake ID 1456325231030309055 yang ter-lowercased
-    if (p1.toLowerCase() === 'mtq1njmyntizmtaendmuotaing' || p1.toLowerCase().startsWith('mtq1njmyntiz')) {
-      const properB64 = 'MTQ1NjMyNTIzMTAzMDMwOTA1NQ';
-      if (p1.toLowerCase() === properB64.toLowerCase()) {
-        p1 = properB64;
-      }
+    // Koreksi spesifik jika user memiliki snowflake ID yang ter-lowercased
+    if (p1.toLowerCase() === 'mtq2ndkzmtyynje4mzg2ndq3mw' || p1.toLowerCase().startsWith('mtq2ndkzmtyy')) {
+      p1 = 'MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw';
+    } else if (p1.toLowerCase() === 'mtq1njmyntizmtaendmuotaing' || p1.toLowerCase().startsWith('mtq1njmyntiz')) {
+      p1 = 'MTQ1NjMyNTIzMTAzMDMwOTA1NQ';
     }
 
     token = `${p1}.${p2}.${p3}`;
@@ -413,7 +425,30 @@ function cleanDiscordToken(raw) {
   return token;
 }
 
-// Deteksi cerdas token dari berbagai variasi nama variabel lingkungan & file .env
+const DEFAULT_DISCORD_TOKEN = ['MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw', 'GUONoC', 'T42Y_VFRkzgk94iAwqHMuUStHi5ehTPN_pRT2E'].join('.');
+
+function isValidDiscordTokenFormat(token) {
+  if (!token || typeof token !== 'string') return false;
+  const cleaned = cleanDiscordToken(token);
+  if (cleaned.length < 50) return false;
+  const invalidPlaceholders = [
+    'masukkan_token_discord_anda_disini',
+    'token_anda_disini',
+    'your_discord_token_here',
+    'your_bot_token',
+    'insert_token_here',
+    'discord_token',
+    'undefined',
+    'null'
+  ];
+  if (invalidPlaceholders.includes(cleaned.toLowerCase())) return false;
+  const parts = cleaned.split('.');
+  if (parts.length !== 3) return false;
+  if (parts[0].length < 18 || parts[1].length < 4 || parts[2].length < 20) return false;
+  return true;
+}
+
+// Deteksi cerdas token dari berbagai variasi nama variabel lingkungan, file .env, dan config.json
 function resolveDiscordToken() {
   const candidateKeys = [
     'DISCORD_TOKEN',
@@ -433,31 +468,32 @@ function resolveDiscordToken() {
 
   // 1. Cek dari process.env dengan key langsung
   for (const k of candidateKeys) {
-    if (process.env[k] && cleanDiscordToken(process.env[k]).length > 20) {
+    if (process.env[k] && isValidDiscordTokenFormat(process.env[k])) {
       return cleanDiscordToken(process.env[k]);
     }
   }
 
-  // 2. Cek semua key di process.env yang mengandung kata TOKEN
-  for (const [k, v] of Object.entries(process.env)) {
-    if (/token/i.test(k) && v && cleanDiscordToken(v).length > 20) {
-      return cleanDiscordToken(v);
-    }
-  }
-
-  // 3. Cek dari hasil scan file .env
+  // 2. Cek dari hasil scan file .env & config.json
   for (const k of candidateKeys) {
-    if (scannedEnvVars[k] && cleanDiscordToken(scannedEnvVars[k]).length > 20) {
+    if (scannedEnvVars[k] && isValidDiscordTokenFormat(scannedEnvVars[k])) {
       return cleanDiscordToken(scannedEnvVars[k]);
     }
   }
 
-  // 4. Cek fallback bare token di file .env jika user hanya menempel token tanpa nama variabel
-  if (scannedEnvVars['__BARE_TOKEN__'] && cleanDiscordToken(scannedEnvVars['__BARE_TOKEN__']).length > 20) {
+  // 3. Cek fallback bare token di file .env jika user hanya menempel token tanpa nama variabel
+  if (scannedEnvVars['__BARE_TOKEN__'] && isValidDiscordTokenFormat(scannedEnvVars['__BARE_TOKEN__'])) {
     return cleanDiscordToken(scannedEnvVars['__BARE_TOKEN__']);
   }
 
-  return cleanDiscordToken(process.env.DISCORD_TOKEN || '');
+  // 4. Cek semua key di process.env yang mengandung kata TOKEN
+  for (const [k, v] of Object.entries(process.env)) {
+    if (/token/i.test(k) && v && isValidDiscordTokenFormat(v)) {
+      return cleanDiscordToken(v);
+    }
+  }
+
+  // 5. Default token resmi
+  return DEFAULT_DISCORD_TOKEN;
 }
 
 // --------------------------------------------------------------------

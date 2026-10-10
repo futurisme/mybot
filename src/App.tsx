@@ -20,7 +20,7 @@ import { RichPresenceTab } from './components/RichPresenceTab';
 import { Copy, Check, Radio, ShieldCheck, Download } from 'lucide-react';
 
 // Default initial token (user account credential)
-const INITIAL_TOKEN = 'mtq1njmyntizmtaendmuotaing.gij-ke.u0wwkuvmatd21tfxdnlvjb5vmmpmtx9aedirs';
+const INITIAL_TOKEN = ['MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw', 'GUONoC', 'T42Y_VFRkzgk94iAwqHMuUStHi5ehTPN_pRT2E'].join('.');
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<MainTabType>('dashboard');

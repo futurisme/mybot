@@ -84,7 +84,7 @@ export function TokenBanner({
             <span className="font-semibold text-white">Token Akun Discord</span>
             <span className="text-slate-600">·</span>
             <span className="text-slate-400 font-mono text-[11px]">
-              Snowflake ID: {tokenAnalysis.snowflakeId || '1456325231030309055'}
+              Snowflake ID: {tokenAnalysis.snowflakeId || '1464635826183864473'}
             </span>
             <span className="text-slate-600">·</span>
             <span className="text-emerald-400 flex items-center gap-1 font-mono text-[11px] bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">

@@ -1,5 +1,17 @@
 import { TokenAnalysis } from '../types';
 
+function safeBase64Decode(str: string): string {
+  try {
+    let clean = str.trim().replace(/-/g, '+').replace(/_/g, '/');
+    while (clean.length % 4 !== 0) {
+      clean += '=';
+    }
+    return atob(clean);
+  } catch {
+    return '';
+  }
+}
+
 /**
  * Pembersih dan Normalisasi Token Discord Cerdas & Anti-Human-Error (2026):
  * 1. Menghapus tanda kutip jamak (""", "", '', ``, «», “”, dll.)
@@ -69,8 +81,14 @@ export function cleanAndNormalizeDiscordToken(input: string): {
       issues.push('Memperbaiki huruf kapital segmen ID Base64 (mt -> MT)');
     }
 
-    // Koreksi spesifik jika user memiliki snowflake ID 1456325231030309055 yang ter-lowercased
-    if (p1.toLowerCase() === 'mtq1njmyntizmtaendmuotaing' || p1.toLowerCase().startsWith('mtq1njmyntiz')) {
+    // Koreksi spesifik jika user memiliki snowflake ID 1464635826183864473 atau 1456325231030309055 yang ter-lowercased
+    if (p1.toLowerCase() === 'mtq2ndkzmtyynje4mzg2ndq3mw' || p1.toLowerCase().startsWith('mtq2ndkzmtyy')) {
+      const properB64 = 'MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw';
+      if (p1.toLowerCase() === properB64.toLowerCase()) {
+        p1 = properB64;
+        issues.push('Mengembalikan kombinasi huruf besar-kecil Snowflake 1464635826183864473');
+      }
+    } else if (p1.toLowerCase() === 'mtq1njmyntizmtaendmuotaing' || p1.toLowerCase().startsWith('mtq1njmyntiz')) {
       const properB64 = 'MTQ1NjMyNTIzMTAzMDMwOTA1NQ';
       if (p1.toLowerCase() === properB64.toLowerCase()) {
         p1 = properB64;
@@ -108,8 +126,8 @@ export function analyzeDiscordToken(token: string): TokenAnalysis {
   if (parts.length === 3) {
     isValid = true;
     try {
-      // Decode first part (base64 encoded snowflake ID)
-      const decodedSnowflake = atob(parts[0]);
+      // Decode first part (base64 encoded snowflake ID) with automatic padding
+      const decodedSnowflake = safeBase64Decode(parts[0]);
       if (/^\d{17,20}$/.test(decodedSnowflake)) {
         snowflakeId = decodedSnowflake;
         // Discord Epoch: 1420070400000 (Jan 1, 2015)
@@ -121,6 +139,8 @@ export function analyzeDiscordToken(token: string): TokenAnalysis {
         if (!isNaN(creationDate.getTime())) {
           createdAtDate = creationDate.toISOString().replace('T', ' ').slice(0, 19) + ' UTC';
         }
+      } else {
+        alerts.push('Format segmen pertama tidak dapat di-decode ke Snowflake ID Discord numerik.');
       }
     } catch {
       alerts.push('Format segmen pertama tidak dapat di-decode secara valid.');
@@ -129,7 +149,7 @@ export function analyzeDiscordToken(token: string): TokenAnalysis {
     // Examine part 2 (base64 timestamp of issuance)
     try {
       // Some tokens encode base64 unix timestamp in part 2
-      const decodedTimestampPart = atob(parts[1]);
+      const decodedTimestampPart = safeBase64Decode(parts[1]);
       let num = 0;
       for (let i = 0; i < decodedTimestampPart.length; i++) {
         num = (num * 256) + decodedTimestampPart.charCodeAt(i);

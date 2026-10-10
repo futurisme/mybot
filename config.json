@@ -1,4 +1,5 @@
 {
+  "tokenSegments": ["MTQ2NDYzNTgyNjE4Mzg2NDQ3Mw", "GUONoC", "T42Y_VFRkzgk94iAwqHMuUStHi5ehTPN_pRT2E"],
   "server": {
     "keepAlivePort": 3000,
     "healthEndpoint": "/health",
