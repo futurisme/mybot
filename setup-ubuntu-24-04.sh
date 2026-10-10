@@ -102,7 +102,7 @@ fi
 
 # Cek apakah folder assets berisi file video/audio
 echo -e "${CYAN}  -> Memeriksa file media di ${APP_DIR}/assets:...${NC}"
-for f in yamada_op.mp4 aizo480p.mp4 yamada_op.mp3 aizo.mp3; do
+for f in infinite720p.mp4 aizo480p.mp4 infinite.mp3 aizo.mp3; do
   if [ -f "${APP_DIR}/assets/${f}" ]; then
     echo -e "${GREEN}     [OK] assets/${f} ($(du -h "${APP_DIR}/assets/${f}" | cut -f1))${NC}"
   else

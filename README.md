@@ -45,7 +45,7 @@
    - Dilengkapi file installer otomatis: `setup-ubuntu-24-04.sh`.
 
 7. **Rotasi Playlist Bergilir & Sinkronisasi Tanpa Batas**:
-   - Track 1: `assets/yamada_op.mp4` & `assets/yamada_op.mp3` (KANA-BOON - ぐらでーしょん) [720p/480p @ 30-35 FPS].
+   - Track 1: `assets/infinite720p.mp4` & `assets/infinite.mp3` (Infinite 720p @ 30-35 FPS).
    - Track 2: `assets/aizo480p.mp4` & `assets/aizo.mp3` (AIZO 480p Fluid @ 35 FPS).
    - Replay berulang tanpa henti dengan jeda anti-deteksi alami 1-2 menit setiap 2 jam siaran.
 
@@ -60,8 +60,8 @@
    cd /opt/fadhilbot
    ```
 3. Pastikan file aset media ada di `/opt/fadhilbot/assets/`:
-   - `assets/yamada_op.mp4`
-   - `assets/yamada_op.mp3`
+   - `assets/infinite720p.mp4`
+   - `assets/infinite.mp3`
    - `assets/aizo480p.mp4`
    - `assets/aizo.mp3`
    - `assets/custom_presence.png` (jika menggunakan custom presence dari web)

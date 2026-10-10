@@ -35,7 +35,7 @@ export function LiveStreamTab({
   const currentLive = voiceConfig.liveStream || {
     enabled: true,
     youtubeUrl: 'https://youtu.be/L5rL0pBzmAE?si=xf2mlt5z4RFJikLJ',
-    title: 'KANA-BOON - ぐらでーしょん (Gradation) ↔ AIZO (360p-480p Adaptive)',
+    title: 'Infinite ↔ AIZO (480p-720p 30-35 FPS)',
     autoLoop: true,
     hourlyBreakEnabled: true,
     breakDurationMinutes: 1.5,
@@ -52,8 +52,8 @@ export function LiveStreamTab({
   const [appliedToast, setAppliedToast] = useState(false);
   const [copiedEnvToast, setCopiedEnvToast] = useState(false);
 
-  // Interactive Live Simulator State (Gradation ↔ AIZO alternating playlist)
-  const [activeSimTrack, setActiveSimTrack] = useState<'gradation' | 'aizo'>('gradation');
+  // Interactive Live Simulator State (Infinite ↔ AIZO alternating playlist)
+  const [activeSimTrack, setActiveSimTrack] = useState<'infinite' | 'aizo'>('infinite');
   const [simState, setSimState] = useState<'streaming' | 'break' | 'looping'>('streaming');
   const [simLoopCount, setSimLoopCount] = useState(1);
   const [simElapsedSeconds, setSimElapsedSeconds] = useState(42);
@@ -72,13 +72,13 @@ export function LiveStreamTab({
         setSimElapsedSeconds((prev) => {
           if (prev >= 235) { // Track duration ~235s
             // Switch playlist track
-            const nextTrack = activeSimTrack === 'gradation' ? 'aizo' : 'gradation';
+            const nextTrack = activeSimTrack === 'infinite' ? 'aizo' : 'infinite';
             setActiveSimTrack(nextTrack);
             setSimLoopCount((l) => l + 1);
             setSimLogs((logs) => [
               {
                 time: new Date().toLocaleTimeString(),
-                text: `[ROTASI PLAYLIST] Track selesai. Berganti ke ${nextTrack === 'gradation' ? 'Gradation (yamada_op)' : 'AIZO (aizo480p)'} 480p + Boosted Audio...`,
+                text: `[ROTASI PLAYLIST] Track selesai. Berganti ke ${nextTrack === 'infinite' ? 'Infinite (infinite720p)' : 'AIZO (aizo480p)'} 720p/480p + Boosted Audio...`,
                 type: 'stream'
               },
               ...logs.slice(0, 6)
@@ -410,7 +410,7 @@ BREAK_DURATION_SECONDS=90
                       </span>
                     </div>
                     <p className="text-[11px] text-[#94a3b8] truncate max-w-[180px]">
-                      {simState === 'streaming' ? '山田くんとLv999の恋をする OP' : 'Istirahat sejenak (AFK)'}
+                      {simState === 'streaming' ? 'Infinite - Screen-Share 720p' : 'Istirahat sejenak (AFK)'}
                     </p>
                   </div>
                 </div>

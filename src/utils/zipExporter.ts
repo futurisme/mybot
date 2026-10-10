@@ -40,10 +40,10 @@ export async function exportFilesAsZip(
 Untuk menghemat kuota & waktu unduh, file video & audio besar tidak disertakan di zip ini.
 
 Pastikan file media berikut berada di dalam folder 'assets/' pada VPS Anda:
-1. assets/yamada_op.mp4  (Video Track 1 - KANA-BOON Gradation 720p/480p)
-2. assets/yamada_op.mp3  (Audio Asli Jernih & Boosted Track 1)
-3. assets/aizo480p.mp4   (Video Track 2 - AIZO 720p/480p 30-35 FPS)
-4. assets/aizo.mp3       (Audio Asli Jernih & Boosted Track 2)
+1. assets/infinite720p.mp4 (Video Track 1 - Infinite 720p 30-35 FPS)
+2. assets/infinite.mp3     (Audio Asli Jernih & Boosted Track 1)
+3. assets/aizo480p.mp4     (Video Track 2 - AIZO 720p/480p 30-35 FPS)
+4. assets/aizo.mp3         (Audio Asli Jernih & Boosted Track 2)
 ${customPresenceImage ? '5. assets/custom_presence.png (Gambar Rich Presence Kustom yang sudah Anda potong dari Web)' : ''}
 
 Cara Pasang Otomatis di Ubuntu 24.04 LTS (1 Dedicated vCPU / 1GB RAM):

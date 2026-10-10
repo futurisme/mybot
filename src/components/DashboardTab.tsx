@@ -357,21 +357,21 @@ export function DashboardTab({
                   Track 1 (Sedang Dimainkan)
                 </span>
                 <h4 className="text-sm font-bold text-white mt-1.5">
-                  KANA-BOON - ぐらでーしょん (Gradation)
+                  Infinite - Screen-Share 720p
                 </h4>
                 <p className="text-slate-400 text-[11px] mt-0.5">
-                  TVアニメ『山田くんとLv999の恋をする』ノンクレジットOP
+                  Full HD Smooth Screen-Share @ 30-35 FPS
                 </p>
               </div>
               <span className="text-xs font-mono text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20 font-bold">
-                720p/480p @ 35 FPS
+                720p @ 35 FPS
               </span>
             </div>
 
             <div className="mt-3 pt-2.5 border-t border-slate-800/80 grid grid-cols-2 gap-2 text-[11px] text-slate-400 font-mono">
-              <div>Video: <span className="text-slate-200">yamada_op.mp4 (720p/480p)</span></div>
-              <div>Audio: <span className="text-emerald-400 font-bold">yamada_op.mp3 (192k)</span></div>
-              <div>Durasi: <span className="text-slate-200">03:55 (Looping)</span></div>
+              <div>Video: <span className="text-slate-200">infinite720p.mp4 (720p)</span></div>
+              <div>Audio: <span className="text-emerald-400 font-bold">infinite.mp3 (192k)</span></div>
+              <div>Durasi: <span className="text-slate-200">04:00 (Looping)</span></div>
               <div>Status: <span className="text-sky-400 font-semibold">Live-Sync On-Mic</span></div>
             </div>
           </div>
@@ -456,7 +456,7 @@ export function DashboardTab({
               </h3>
             </div>
             <p className="text-xs text-slate-300">
-              Sesuai instruksi Anda, file video (<code className="text-sky-300 font-mono">yamada_op.mp4</code>, <code className="text-purple-300 font-mono">aizo480p.mp4</code>) dan audio (<code className="text-emerald-300 font-mono">yamada_op.mp3</code>, <code className="text-emerald-300 font-mono">aizo.mp3</code>) <strong>sengaja tidak dimasukkan ke dalam ZIP</strong>. Anda tidak perlu berulang kali mengunduh file media 40+ MB yang sama dan sudah ada di VPS!
+              Sesuai instruksi Anda, file video (<code className="text-sky-300 font-mono">infinite720p.mp4</code>, <code className="text-purple-300 font-mono">aizo480p.mp4</code>) dan audio (<code className="text-emerald-300 font-mono">infinite.mp3</code>, <code className="text-emerald-300 font-mono">aizo.mp3</code>) <strong>sengaja tidak dimasukkan ke dalam ZIP</strong>. Anda tidak perlu berulang kali mengunduh file media 40+ MB yang sama dan sudah ada di VPS!
             </p>
           </div>
 

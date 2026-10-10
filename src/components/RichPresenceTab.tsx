@@ -43,7 +43,7 @@ export function RichPresenceTab({
     name: 'YouTube Live Screen-Share',
     type: 'STREAMING',
     url: voiceConfig.liveStream?.youtubeUrl || 'https://youtu.be/L5rL0pBzmAE?si=xf2mlt5z4RFJikLJ',
-    details: 'KANA-BOON - ぐらでーしょん (Gradation)',
+    details: 'Infinite (720p Screen-Share)',
     state: 'Menyiarkan MP4 480p-720p @ 30-35 FPS (Go-Live)',
     largeImage: 'assets/custom_presence.png',
     largeText: '720p 35FPS Go-Live Screen-Share (1 Dedicated vCPU)',
@@ -460,7 +460,7 @@ ACTIVITY_SMALL_TEXT=${rpcState.smallText}
                   name: 'YouTube Live Screen-Share',
                   type: 'STREAMING',
                   url: 'https://youtu.be/L5rL0pBzmAE?si=xf2mlt5z4RFJikLJ',
-                  details: 'KANA-BOON - ぐらでーしょん (Gradation)',
+                  details: 'Infinite (720p Screen-Share)',
                   state: 'Menyiarkan MP4 720p @ 35 FPS (1 vCPU Dedicated)',
                   largeImage: croppedPreviewUrl ? 'assets/custom_presence.png' : 'youtube',
                   largeText: '720p 35FPS Go-Live Screen-Share (1 Dedicated vCPU)',
@@ -607,7 +607,7 @@ ACTIVITY_SMALL_TEXT=${rpcState.smallText}
               value={rpcState.details}
               onChange={(e) => setRpcState({ ...rpcState, details: e.target.value })}
               className="w-full bg-slate-950 border border-slate-800 focus:border-sky-500 rounded-lg px-3 py-2 text-white font-mono text-xs focus:outline-none"
-              placeholder="KANA-BOON - ぐらでーしょん (Gradation)"
+              placeholder="Infinite (720p Screen-Share)"
             />
           </div>
 

@@ -42,7 +42,7 @@ export function getRepositoryFiles(
     liveStream: {
       enabled: true,
       youtubeUrl: 'https://youtu.be/L5rL0pBzmAE?si=xf2mlt5z4RFJikLJ',
-      title: 'KANA-BOON - ぐらでーしょん (Gradation) ↔ AIZO (480p-720p 30-35 FPS)',
+      title: 'Infinite ↔ AIZO (480p-720p 30-35 FPS)',
       autoLoop: true,
       hourlyBreakEnabled: true,
       breakDurationMinutes: 1.5,
@@ -130,7 +130,7 @@ NODE_OPTIONS="--max-old-space-size=512"
 ACTIVITY_NAME=${rpc?.name || 'YouTube Live Screen-Share'}
 ACTIVITY_TYPE=${rpc?.type || 'STREAMING'}
 ACTIVITY_URL=${rpc?.url || 'https://youtu.be/L5rL0pBzmAE?si=xf2mlt5z4RFJikLJ'}
-ACTIVITY_DETAILS=${rpc?.details || 'KANA-BOON - ぐらでーしょん (Gradation)'}
+ACTIVITY_DETAILS=${rpc?.details || 'Infinite (720p Screen-Share)'}
 ACTIVITY_STATE=${rpc?.state || 'Menyiarkan MP4 480p-720p @ 30-35 FPS (Go-Live)'}
 ACTIVITY_LARGE_IMAGE=${rpc?.largeImage || 'assets/custom_presence.png'}
 ACTIVITY_LARGE_TEXT=${rpc?.largeText || '720p 35FPS Go-Live Screen-Share (1 Dedicated vCPU)'}
@@ -166,7 +166,7 @@ BREAK_DURATION_SECONDS=90
     richPresence: {
       name: rpc?.name || 'YouTube Live Screen-Share',
       type: rpc?.type || 'STREAMING',
-      details: rpc?.details || 'KANA-BOON - ぐらでーしょん (Gradation)',
+      details: rpc?.details || 'Infinite (720p Screen-Share)',
       state: rpc?.state || 'Menyiarkan MP4 480p-720p @ 30-35 FPS (Go-Live)',
       largeImage: rpc?.largeImage || 'assets/custom_presence.png',
       largeText: rpc?.largeText || '720p 35FPS Go-Live Screen-Share (1 Dedicated vCPU)',

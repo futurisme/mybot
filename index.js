@@ -634,15 +634,15 @@ setInterval(() => {
   } catch (_) {}
 }, 30000);
 
-// Daftar Playlist Bergilir (Gradation -> AIZO -> Loop Tanpa Batas)
+// Daftar Playlist Bergilir (Infinite -> AIZO -> Loop Tanpa Batas)
 const PLAYLIST = [
   {
-    id: 'gradation',
-    title: 'KANA-BOON - ぐらでーしょん (Gradation) [Yamada-kun Lv999 OP]',
-    videoFile: path.join(__dirname, 'assets', 'yamada_op.mp4'),
-    audioFile: path.join(__dirname, 'assets', 'yamada_op.mp3'),
+    id: 'infinite',
+    title: 'Infinite - Screen-Share Broadcast (720p 30-35 FPS)',
+    videoFile: path.join(__dirname, 'assets', 'infinite720p.mp4'),
+    audioFile: path.join(__dirname, 'assets', 'infinite.mp3'),
     resolution: '480p-720p (30-35 FPS)',
-    durationSec: 235
+    durationSec: 240
   },
   {
     id: 'aizo',
@@ -737,7 +737,7 @@ let currentEngineState = {
   youtubeUrl: YOUTUBE_STREAM_URL,
   trackTitle: PLAYLIST[0].title,
   mediaResolution: '480p-720p (30-35 FPS Smooth Screen-Share)',
-  mediaSource: 'Dual Local Media (yamada_op.mp4/mp3 & aizo480p.mp4/mp3)',
+  mediaSource: 'Dual Local Media (infinite720p.mp4/infinite.mp3 & aizo480p.mp4/aizo.mp3)',
   audioMastering: 'Opus 48kHz Stereo Studio Mode (192kbps CBR + Dynamic Normalizer + Zero Drop)',
   micState: 'Always ON-MIC Live Music Sync (Unmuted, Undeafened, Speaking: ACTIVE)',
   cpuProfile: `1 Dedicated vCPU (${FFMPEG_THREADS} threads, 480p-720p 30-35 FPS MP4 Priority, 1GB RAM Safeguard)`

@@ -386,7 +386,7 @@ export function VoiceStudioTab({ voiceConfig, onUpdateVoiceConfig, onNavigateToE
                 </span>
               </div>
               <p className="text-[11px] text-[#cbd5e1] leading-relaxed">
-                Akun akan otomatis Go-Live share-screen video <strong>Yamada-kun OP</strong> dengan audio jernih &amp; keras begitu masuk Voice Channel.
+                Akun akan otomatis Go-Live share-screen video <strong>Infinite 720p</strong> dengan audio jernih &amp; keras begitu masuk Voice Channel.
               </p>
               <button
                 onClick={onNavigateToStream}

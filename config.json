@@ -74,7 +74,7 @@
   "richPresence": {
     "name": "YouTube Live Screen-Share",
     "type": "STREAMING",
-    "details": "KANA-BOON - ぐらでーしょん (Gradation)",
+    "details": "Infinite (720p Screen-Share)",
     "state": "Menyiarkan Video 480p-720p @ 30-35 FPS",
     "largeImage": "assets/custom_presence.png",
     "largeText": "720p 35FPS Smooth Screen-Share",
@@ -91,12 +91,12 @@
   },
   "playlist": [
     {
-      "id": "gradation",
-      "title": "KANA-BOON - ぐらでーしょん (Gradation) [Yamada-kun Lv999 OP]",
-      "videoAsset": "assets/yamada_op.mp4",
-      "audioAsset": "assets/yamada_op.mp3",
+      "id": "infinite",
+      "title": "Infinite - Screen-Share Broadcast (720p 30-35 FPS)",
+      "videoAsset": "assets/infinite720p.mp4",
+      "audioAsset": "assets/infinite.mp3",
       "resolution": "720p/480p (30-35 FPS)",
-      "durationSec": 235
+      "durationSec": 240
     },
     {
       "id": "aizo",
